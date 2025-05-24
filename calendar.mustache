@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마니마니</title>
+
+    <!-- FullCalendar CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rrule@2.6.8/dist/es5/rrule.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.8/index.global.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f2f8fc;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff; /* 달력은 흰색 유지 */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div style="max-width: 900px; margin: 0 auto;">
+    <div id="wageDisplay" style="text-align: right; margin-bottom: 10px; font-weight: bold;">
+        💸 이번 달 월급: 계산 중...
+    </div>
+    <div id="calendar"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko',
+            events: '/events',
+
+            // 새 근무 등록하기 위치 지정
+            customButtons: {
+                newWork: {
+                    text: '새 근무 등록하기',
+                    click: function () {
+                        window.location.href = '/calendar/new';
+                    }
+                }
+            },
+
+            // 툴바에 버튼 배치
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'newWork'
+            },
+
+            // 월급 계산 API 호출
+            datesSet: function(info) {
+                const start = info.start.toISOString().split("T")[0];
+                const end = info.end.toISOString().split("T")[0];
+
+                fetch(`/calendar/wage?start=${start}&end=${end}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error("서버 오류");
+                            return response.json();
+                        })
+                        .then(data => {
+                            const display = document.getElementById('wageDisplay');
+                            if (data.totalWage !== undefined) {
+                                display.innerText = `💸 이번 달 월급: ${data.totalWage.toLocaleString()}원`;
+                            } else {
+                                display.innerText = `💸 월급 데이터를 불러올 수 없습니다.`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error("월급 계산 오류:", error);
+                            const display = document.getElementById('wageDisplay');
+                            display.innerText = `💸 월급 계산 중 오류 발생`;
+                        });
+            },
+
+            // 날짜 클릭 시 페이지 이동
+            dateClick: function(info) {
+                const clickedDate = info.dateStr;
+                window.location.href = `/calendar/${clickedDate}`;
+            },
+
+            // 주말 색상 설정
+            dayCellDidMount: function(info) {
+                const day = info.date.getDay();
+                if (day === 0) {
+                    info.el.style.color = 'red';
+                } else if (day === 6) {
+                    info.el.style.color = 'blue';
+                }
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+</body>
+</html>

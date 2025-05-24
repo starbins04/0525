@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>근무 수정</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        h4 {
+            font-weight: 700;
+            color: #1d466c;
+            margin-bottom: 30px;
+            padding-bottom: 8px;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+        }
+
+        .input-form {
+            max-width: 680px;
+
+            margin-top: 80px;
+            padding: 32px;
+
+            background: #fff;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+    </style>
+</head>
+
+
+<body>
+<form class="container" action="/calendar/{{calendar.date}}/update" method="post">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-4">근무 수정</h4>
+
+            <div class="mb-3">
+                <label for="mini">시급</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="mini" name="mini" value="{{calendar.mini}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">원</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="date">근무 날짜</label>
+                <input type="date" class="form-control" id="date" name="date" value="{{calendar.date}}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="startTime">근무 시간</label>
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="flex-grow-1">
+                        <input type="time" class="form-control" id="startTime" name="startTime" value="{{calendar.startTime}}">
+                    </div>
+                    <span>~</span>
+                    <div class="flex-grow-1">
+                        <input type="time" class="form-control" id="endTime" name="endTime" value="{{calendar.endTime}}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="breakTime">휴게 시간</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="breakTime" name="breakTime" value="{{calendar.breakTime}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">분</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4"></div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">수정하기</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

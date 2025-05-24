@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>근무 일정 조회</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .input-form {
+            max-width: 680px;
+            margin-top: 80px;
+            padding: 32px 40px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h4 {
+            font-weight: 700;
+            color: #1d466c;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1d466c;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #1d466c;
+            font-size: 1.1rem;
+            min-width: 120px;
+        }
+
+        .form-control-plaintext {
+            margin: 0;
+            font-size: 1.15rem;
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+            flex-grow: 1;
+        }
+
+        .custom-button-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .custom-button {
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: normal;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: white;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .custom-button:hover {
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #007bff;
+        }
+
+        .btn-list {
+            background-color: #34495e;
+        }
+
+        .btn-edit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-list:hover {
+            background-color: #223242;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!--삭제 버튼 꾸미기-->
+</head>
+<body>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="d-flex justify-content-between align-items-center">
+                근무 일정 조회
+                <form method="post" action="/calendar/{{calendar.date}}/delete" id="delete-form">
+                    <button type="button" class="btn btn-outline-danger btn-sm ml-2" onclick="confirmDelete()">
+                        삭제
+                    </button>
+                </form>
+            </h4>
+
+            <div class="form-group">
+                <label>시급</label>
+                <p class="form-control-plaintext">{{ calendar.mini }}</p>
+            </div>
+
+            <div class="form-group">
+                <label>근무 날짜</label>
+                <p class="form-control-plaintext">{{ calendar.date }}</p>
+            </div>
+
+            <div class="form-group">
+                <label>근무 시간</label>
+                <p class="form-control-plaintext">
+                    {{ calendar.startTime }} ~ {{ calendar.endTime }}
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label>휴게 시간</label>
+                <p class="form-control-plaintext">{{ calendar.breakTime }} 분</p>
+            </div>
+
+            <div class="custom-button-group">
+                <a href="/calendar/{{calendar.date}}/edit" class="custom-button btn-edit">수정하기</a>
+                <a href="/calendar" class="custom-button btn-list">목록으로</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        Swal.fire({
+            title: '정말 삭제하시겠습니까?',
+            text: "삭제 후에는 복구할 수 없습니다.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: '삭제하기',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 폼 자동 제출
+                document.getElementById('delete-form').submit();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
